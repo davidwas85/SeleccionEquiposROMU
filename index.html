@@ -381,7 +381,13 @@
   }
 
   /* ---------- Mobile ---------- */
-  @media (max-width:900px){
+  @media (max-width:600px){
+      .topbar { grid-template-columns: 1fr; }
+  .topbar .btn-csv {
+    justify-self: stretch;
+    justify-content: center;
+    padding: 16px;
+  }
     .layout{
       grid-template-columns:1fr;
       grid-template-areas:"squad" "nav" "board";
