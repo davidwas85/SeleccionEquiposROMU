@@ -41,14 +41,31 @@
   }
   h1,h2,.scorenum,.gauge-label{font-family:'Teko',system-ui,sans-serif;}
 
+  .btn-csv {
+  padding: 10px 18px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s;
+}
+.btn-csv:hover { background: #1e7e34; }
+  
   /* ---------- Topbar ---------- */
   .topbar{
+    grid-template-columns: 1fr auto;   /* párrafo flexible + botón tamaño natural */
+  gap: 8px 20px;                     /* espacio vertical y horizontal */
+  align-items: center;
     background: linear-gradient(180deg, var(--pitch) 0%, var(--pitch-dark) 100%);
     color:#F2EFE4;
     padding:22px clamp(16px,3vw,40px) 26px;
     border-bottom:4px solid var(--gold);
   }
   .topbar h1{
+    grid-column: 1 / -1; 
     font-size:clamp(30px,4vw,42px);
     font-weight:600;
     letter-spacing:0.3px;
@@ -60,6 +77,11 @@
     font-size:14.5px;
     max-width:640px;
   }
+  .topbar .btn-csv {
+  align-self: center;    /* centrado vertical respecto al párrafo */
+}
+
+  
 
   /* ---------- Layout ---------- */
   .layout{
@@ -340,18 +362,9 @@
   <h1>Draft de selecciones · ISSD ROM U</h1>
   <p>Elige tus 4 equipos con 28 Puntos de Selección disponibles. Cada selección tiene un Valor que descuenta de tus puntos — te recomiendo eligir equipos que vayan más de acuerdo al estilo de tu juego.</p>
 
-  <button id="btnCSV" class="btn-csv">⬇ Descargar CSV</button>
+  <button id="btnCSV" class="btn-csv">⬇ Descargar Skills Rom U</button>
 
-<script>
-  document.getElementById('btnCSV').addEventListener('click', () => {
-    const a = document.createElement('a');
-    a.href = 'SkillsRomU.csv';           // ruta relativa al index.html
-    a.download = 'SkillsRomU.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  });
-</script>
+
   
 </header>
 
@@ -656,6 +669,18 @@ searchEl.addEventListener("input", (e)=>{
 
 buildBoard();
 render();
+
+
+  document.getElementById('btnCSV').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = 'SkillsRomU.csv';           // ruta relativa al index.html
+    a.download = 'SkillsRomU.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+
 </script>
 </body>
 </html>
