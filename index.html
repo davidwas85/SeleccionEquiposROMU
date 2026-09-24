@@ -339,6 +339,20 @@
 <header class="topbar">
   <h1>Draft de selecciones · ISSD ROM U</h1>
   <p>Elige tus 4 equipos con 28 Puntos de Selección disponibles. Cada selección tiene un Valor que descuenta de tus puntos — te recomiendo eligir equipos que vayan más de acuerdo al estilo de tu juego.</p>
+
+  <button id="btnCSV" class="btn-csv">⬇ Descargar CSV</button>
+
+<script>
+  document.getElementById('btnCSV').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = 'SkillsRomU.csv';           // ruta relativa al index.html
+    a.download = 'SkillsRomU.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+</script>
+  
 </header>
 
 <div class="layout">
