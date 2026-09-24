@@ -41,6 +41,46 @@
   }
   h1,h2,.scorenum,.gauge-label{font-family:'Teko',system-ui,sans-serif;}
 
+   /* ---------- Copiar Equipos ---------- */
+
+  .toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.15);
+
+  /* Estado inicial: fuera de pantalla a la derecha */
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform .35s cubic-bezier(.2, .9, .3, 1.2),
+              opacity .3s ease;
+
+  pointer-events: none;   /* no bloquea clics debajo */
+  max-width: calc(100vw - 40px);
+  word-break: break-word;
+}
+
+.toast-show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Variante para el aviso de error */
+.toast-warn {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+  
    /* ---------- Descarga ---------- */
   
  .btn-csv {
@@ -382,7 +422,17 @@
 
   /* ---------- Mobile ---------- */
   @media (max-width:600px){
-      .topbar { grid-template-columns: 1fr; }
+  .toast {
+    top: auto;
+    bottom: 20px;
+    right: 50%;
+    transform: translate(50%, 120%);   /* entra desde abajo */
+  }
+  .toast-show {
+    transform: translate(50%, 0);
+  }
+    
+   .topbar { grid-template-columns: 1fr; }
   .topbar .btn-csv {
     justify-self: stretch;
     justify-content: center;
@@ -709,12 +759,47 @@ function render(){
   confirmBtn.disabled = selected.length !== MAX_TEAMS;
 }
 
-confirmBtn.addEventListener("click", ()=>{
-  const names = selected.map(e=>TEAMS.find(t=>t.equipo===e).equipo).join(", ");
+confirmBtn.addEventListener("click", async () => {
+  const names = selected
+    .map(e => TEAMS.find(t => t.equipo === e).equipo)
+    .join(", ");
+
   statusEl.textContent = "¡Selección confirmada! Tu plantilla: " + names + ".";
   statusEl.className = "status show ok";
+
+  // 1) Copiar al portapapeles
+  try {
+    await navigator.clipboard.writeText(names);
+    mostrarToast("Equipos copiados al portapapeles ✅");
+  } catch (err) {
+    // Fallback por si el navegador bloquea el clipboard (http, permisos, etc.)
+    mostrarToast("No se pudo copiar automáticamente ⚠️", "warn");
+    console.warn("Clipboard error:", err);
+  }
 });
 
+  function mostrarToast(mensaje, tipo = "ok", duracion = 3000) {
+  // Elimina cualquier toast previo para no apilarlos
+  const anterior = document.querySelector(".toast");
+  if (anterior) anterior.remove();
+
+  // Crea el toast
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${tipo}`;
+  toast.textContent = mensaje;
+  document.body.appendChild(toast);
+
+  // Fuerza reflow para que la animación de entrada se dispare
+  void toast.offsetWidth;
+  toast.classList.add("toast-show");
+
+  // Auto-cierre
+  setTimeout(() => {
+    toast.classList.remove("toast-show");
+    toast.addEventListener("transitionend", () => toast.remove(), { once: true });
+  }, duracion);
+}
+  
 resetBtn.addEventListener("click", ()=>{
   selected = [];
   statusEl.classList.remove("show");
