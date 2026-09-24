@@ -770,7 +770,7 @@ confirmBtn.addEventListener("click", async () => {
   // 1) Copiar al portapapeles
   try {
     await navigator.clipboard.writeText(names);
-    mostrarToast("Equipos copiados al portapapeles ✅");
+    mostrarToast(`Los equipos: ${names} fueron copiados al portapapeles.`);
   } catch (err) {
     // Fallback por si el navegador bloquea el clipboard (http, permisos, etc.)
     mostrarToast("No se pudo copiar automáticamente ⚠️", "warn");
